@@ -180,44 +180,44 @@ static void PCcom_Rec_App_Task(void *pvParameters)
 返 回 值 ： 无
 作    者 ： FelixWu
 *************************************************/
-void PC_COM_IRQHandler(void)
-{
-    BaseType_t xHigherPriorityTaskWoken = pdTRUE;
+//void PC_COM_IRQHandler(void)
+//{
+//    BaseType_t xHigherPriorityTaskWoken = pdTRUE;
 
-    if(USART_GetITStatus(PC_COM, USART_IT_RXNE) != RESET)
-    {
-        /* START --- 添加在这里的内容，是为了保证清除了标志 */
-        USART_ClearITPendingBit(PC_COM, USART_IT_RXNE);
-        /* END ---- 添加在这里的内容，是为了保证清除了标志 */
+//    if(USART_GetITStatus(PC_COM, USART_IT_RXNE) != RESET)
+//    {
+//        /* START --- 添加在这里的内容，是为了保证清除了标志 */
+//        USART_ClearITPendingBit(PC_COM, USART_IT_RXNE);
+//        /* END ---- 添加在这里的内容，是为了保证清除了标志 */
 
-        PC_COM_RX_BUF[PC_COM_RX_STA++] = USART_ReceiveData(PC_COM);
-    }
-    else if(USART_GetITStatus(PC_COM, USART_IT_IDLE) != RESET)	// 如果接收到完整的一帧数据
-    {
-        USART_ReceiveData(PC_COM);
-        PC_COM_RX_STA=0;
-        USART_ClearITPendingBit(PC_COM,USART_IT_IDLE);
+//        PC_COM_RX_BUF[PC_COM_RX_STA++] = USART_ReceiveData(PC_COM);
+//    }
+//    else if(USART_GetITStatus(PC_COM, USART_IT_IDLE) != RESET)	// 如果接收到完整的一帧数据
+//    {
+//        USART_ReceiveData(PC_COM);
+//        PC_COM_RX_STA=0;
+//        USART_ClearITPendingBit(PC_COM,USART_IT_IDLE);
 
-        /* Notify battery更新task */
-        for(int i = 0 ; i < PC_COM_REC_LEN; i ++)
-            PC_COM_RX_BUF_BACKUP[i] = PC_COM_RX_BUF[i];
-		
-		if(PCcom_Rec_App_Task_Handler!=NULL) {
-			xTaskNotifyFromISR(PCcom_Rec_App_Task_Handler, PC_COM_RX_BUF[2], (eNotifyAction) eSetValueWithOverwrite,&xHigherPriorityTaskWoken);//发送任务通知
-			portYIELD_FROM_ISR(PCcom_Rec_App_Task_Handler);//如果需要的话进行一次任务切换
-		}
+//        /* Notify battery更新task */
+//        for(int i = 0 ; i < PC_COM_REC_LEN; i ++)
+//            PC_COM_RX_BUF_BACKUP[i] = PC_COM_RX_BUF[i];
+//		
+//		if(PCcom_Rec_App_Task_Handler!=NULL) {
+//			xTaskNotifyFromISR(PCcom_Rec_App_Task_Handler, PC_COM_RX_BUF[2], (eNotifyAction) eSetValueWithOverwrite,&xHigherPriorityTaskWoken);//发送任务通知
+//			portYIELD_FROM_ISR(PCcom_Rec_App_Task_Handler);//如果需要的话进行一次任务切换
+//		}
 
-    }
+//    }
 
-    /* START --- 添加在这里的内容，是为了保证清除了标志 */
-    //发的地方清标志
-    if(USART_GetFlagStatus(PC_COM,USART_FLAG_ORE) == SET)
-    {
-        USART_ClearFlag(PC_COM,USART_FLAG_ORE);
-        USART_ReceiveData(PC_COM);
-    }
-    /* END ---- 添加在这里的内容，是为了保证清除了标志 */
-}
+//    /* START --- 添加在这里的内容，是为了保证清除了标志 */
+//    //发的地方清标志
+//    if(USART_GetFlagStatus(PC_COM,USART_FLAG_ORE) == SET)
+//    {
+//        USART_ClearFlag(PC_COM,USART_FLAG_ORE);
+//        USART_ReceiveData(PC_COM);
+//    }
+//    /* END ---- 添加在这里的内容，是为了保证清除了标志 */
+//}
 
 
 /**** Copyright (C)2019 FelixWu. All Rights Reserved **** END OF FILE ****/

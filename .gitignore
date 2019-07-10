@@ -11,5 +11,6 @@
 *.lnp
 *.sct
 *.dep
-*.uvguix.Felix.Wu
+*.TMP
+*.uvguix.winner
 JLinkLog.txt

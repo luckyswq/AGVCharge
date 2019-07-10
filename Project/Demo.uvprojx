@@ -335,7 +335,7 @@
               <MiscControls></MiscControls>
               <Define>STM32F10X_MD</Define>
               <Undefine></Undefine>
-              <IncludePath>..\App;..\Bsp;..\Libraries\CMSIS\CoreSupport;..\Libraries\CMSIS\DeviceSupport;..\Libraries\STM32F10x_StdPeriph_Driver\inc;..\FreeRTOS\include;..\FreeRTOS\portable\RVDS\ARM_CM3;..\App\pccom;..\App\watchdog;..\App\led;..\App\Stepper;..\App\StateMachine</IncludePath>
+              <IncludePath>..\App;..\Bsp;..\Libraries\CMSIS\CoreSupport;..\Libraries\CMSIS\DeviceSupport;..\Libraries\STM32F10x_StdPeriph_Driver\inc;..\FreeRTOS\include;..\FreeRTOS\portable\RVDS\ARM_CM3;..\App\pccom;..\App\watchdog;..\App\led;..\App\Stepper;..\App\StateMachine;..\App\MODBUS</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -678,6 +678,21 @@
               <FileName>state_machine_app.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\App\StateMachine\state_machine_app.h</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>App/HMI</GroupName>
+          <Files>
+            <File>
+              <FileName>HMI_dev.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\App\MODBUS\HMI_dev.c</FilePath>
+            </File>
+            <File>
+              <FileName>modbus.C</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\App\MODBUS\modbus.C</FilePath>
             </File>
           </Files>
         </Group>
