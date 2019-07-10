@@ -1,0 +1,22 @@
+#include "stm32f10x.h"
+
+void IWDG_Configuration(void)
+{
+	/* Enable the IWDG write */
+	IWDG_WriteAccessCmd(IWDG_WriteAccess_Enable);
+	
+	/* 40K/256 = 156Hz(6.4ms)
+	   40K/8 =5KHz(0.2ms)*/
+	IWDG_SetPrescaler(IWDG_Prescaler_8);
+	
+	/* 50x0.2 = 10ms, value should < 0xfff */
+	IWDG_SetReload(50);
+	
+	IWDG_ReloadCounter();
+	
+	IWDG_Enable();
+}
+
+void IWDG_Feed(void){
+	IWDG_ReloadCounter();
+}

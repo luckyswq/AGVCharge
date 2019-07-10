@@ -1,0 +1,2 @@
+KERNEL=="ttyUSB*", ATTRS{idVendor}=="0403", ATTRS{idProduct}=="6001", ATTRS{product}=="FT232R USB UART NTA", MODE:="0777", SYMLINK+="nvidia2arm"
+KERNEL=="ttyUSB*", ATTRS{idVendor}=="0403", ATTRS{idProduct}=="6001", ATTRS{product}=="FT232R USB UART ATN", MODE:="0777", SYMLINK+="arm2nvidia"

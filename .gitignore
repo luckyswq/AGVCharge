@@ -1,0 +1,15 @@
+*.obj
+*.hex
+*.bin
+*.map
+*.crf
+*.d
+*.o
+*.lst
+*.htm
+*.axf
+*.lnp
+*.sct
+*.dep
+*.uvguix.Felix.Wu
+JLinkLog.txt

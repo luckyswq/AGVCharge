@@ -1,0 +1,87 @@
+/**
+  ******************************************************************************
+  * @文件名     ： button_app.c
+  * @作者       ： FelixWu
+  * @版本       ： V1.0.0
+  * @日期       ： 2019年03月07日
+  * @摘要       ： button_app
+  ******************************************************************************/
+/*----------------------------------------------------------------------------
+  更新日志:
+  2019-03-01 V1.0.0:初始版本
+  ----------------------------------------------------------------------------*/
+#include "led_app.h"
+#include "bsp_usart.h"
+TaskHandle_t Led_App_Task_Handler;
+
+
+/* 静态申明 ------------------------------------------------------------------*/
+static void Led_App_Task(void *pvParameters);
+void Led_IO_Config_Init(void);
+
+
+/************************************************
+函数名称 ： Led_App_Init
+功    能 ： Led应用程序初始化
+参    数 ： 无
+返 回 值 ： 无
+作    者 ： FelixWu
+*************************************************/
+void Led_App_Init(void)
+{
+    BaseType_t xReturn;
+    Led_IO_Config_Init();
+    xReturn = xTaskCreate(Led_App_Task, "Led_App_Task", LED_STACK_SIZE, NULL, LED_TASK_PRIORITY, &Led_App_Task_Handler);
+    if(pdPASS != xReturn)
+    {
+        printf("Led_App create failed");
+        return;                                      //创建接收任务失败
+    }
+}
+
+/************************************************
+函数名称 ： Led_App_Task
+功    能 ： Led应用任务程序
+参    数 ： pvParameters --- 可选参数
+返 回 值 ： 无
+作    者 ： FelixWu
+*************************************************/
+static void Led_App_Task(void *pvParameters)
+{
+    for(;;)
+    {
+        LED1_TOGGLE();
+//        LED2_TOGGLE();
+//		printf("Led_App_Task()");
+        vTaskDelay(50);
+    }
+}
+
+/************************************************
+函数名称 ： Led_IO_Config_Init
+功    能 ： Led IO初始化
+参    数 ： 无
+返 回 值 ： 无
+作    者 ： FelixWu
+*************************************************/
+void Led_IO_Config_Init(void)
+{
+
+    GPIO_InitTypeDef GPIO_InitStructure;
+
+    RCC_APB2PeriphClockCmd(LED1_GPIO_CLK | LED2_GPIO_CLK, ENABLE);
+
+    GPIO_InitStructure.GPIO_Pin = LED1_PIN;
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+    GPIO_Init(LED1_GPIO_PORT, &GPIO_InitStructure);
+
+    GPIO_InitStructure.GPIO_Pin = LED2_PIN;
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+    GPIO_Init(LED2_GPIO_PORT, &GPIO_InitStructure);
+
+}
+
+
+/**** Copyright (C)2019 FelixWu. All Rights Reserved **** END OF FILE ****/
