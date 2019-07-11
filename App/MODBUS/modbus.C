@@ -11,9 +11,6 @@ unsigned char CommBuf[MaxDataLen];	  		//������������
 
 
 unsigned char 	APPRecFinishF;
-unsigned int  	APPCommIndex;   								//�����������Ŵ���
-unsigned int 	APPCommIndexEnd;	   						//�ظ�HMI�������Ӧ����?��������
-unsigned char 	APPCommBuf[MaxDataLen];	  		//������������
 
 unsigned char SlaveOutputBuf[MaxRegLen]; 	// Hight 8 bit of word is front,Low 8 bit is back
 //==============�����Ȧ״�?�����򣬾�����modbuS.c�Լ�modbuS.h����ʹ��======================
@@ -121,8 +118,6 @@ void Modbus_Configuration(void)		 //�Ĵ�����ʼ��
 	CommIndexEnd=0xff; // First enlarge recieve lenght
 	
 	APPRecFinishF=0;
-	APPCommIndex=0;
-	APPCommIndexEnd=0xff; // First enlarge recieve lenght
 }
 
 
@@ -640,6 +635,25 @@ void HMI_Run_task(void *pvParameters){
 			AnalyzeRecieve();//���ô���������Ӧд�Ĵ����Լ����Ĵ���	
 			RecFinishF=0;
 			APPRecFinishF=0;
+
+			if((CoilDat[0]&0x01))GPIO_SetBits(GPIOB,GPIO_Pin_4);						 
+			else GPIO_ResetBits(GPIOB,GPIO_Pin_4);						 
+			if(CoilDat[0]&(0x01<<1))GPIO_SetBits(GPIOB,GPIO_Pin_5);		
+			else GPIO_ResetBits(GPIOB,GPIO_Pin_5);						 
+			if(CoilDat[0]&(0x01<<2))GPIO_SetBits(GPIOB,GPIO_Pin_6);		
+			else GPIO_ResetBits(GPIOB,GPIO_Pin_6);						 
+			if(CoilDat[0]&(0x01<<3))GPIO_SetBits(GPIOB,GPIO_Pin_7);		
+			else GPIO_ResetBits(GPIOB,GPIO_Pin_7);						 
+			
+
+			if(GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_12))CoilDat[0]|=(0x01<<4);
+			else CoilDat[0]&=(~(0x01<<4));
+			if(GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_13))CoilDat[0]|=(0x01<<5);
+			else CoilDat[0]&=(~(0x01<<5));			
+			if(GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_14))CoilDat[0]|=(0x01<<6);
+			else CoilDat[0]&=(~(0x01<<6));
+			if(GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_15))CoilDat[0]|=(0x01<<7);
+			else CoilDat[0]&=(~(0x01<<7));			
 		}
 	}
 }	

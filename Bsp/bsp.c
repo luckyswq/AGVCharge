@@ -1,16 +1,16 @@
 /**
   ******************************************************************************
-  * @ÎÄ¼þÃû     £º bsp.c
-  * @×÷Õß       £º Felix Wu
-  * @°æ±¾       £º V1.0.0
-  * @ÈÕÆÚ       £º 2018Äê11ÔÂ14ÈÕ
-  * @ÕªÒª       £º µ×²ãÇý¶¯Ô´ÎÄ¼þ
+  * @ï¿½Ä¼ï¿½ï¿½ï¿½     ï¿½ï¿½ bsp.c
+  * @ï¿½ï¿½ï¿½ï¿½       ï¿½ï¿½ Felix Wu
+  * @ï¿½æ±¾       ï¿½ï¿½ V1.0.0
+  * @ï¿½ï¿½ï¿½ï¿½       ï¿½ï¿½ 2018ï¿½ï¿½11ï¿½ï¿½14ï¿½ï¿½
+  * @ÕªÒª       ï¿½ï¿½ ï¿½×²ï¿½ï¿½ï¿½ï¿½ï¿½Ô´ï¿½Ä¼ï¿½
   ******************************************************************************/
 /*----------------------------------------------------------------------------
-  ¸üÐÂÈÕÖ¾:
-  2018-11-14 V1.0.0:³õÊ¼°æ±¾
+  ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö¾:
+  2018-11-14 V1.0.0:ï¿½ï¿½Ê¼ï¿½æ±¾
   ----------------------------------------------------------------------------*/
-/* °üº¬µÄÍ·ÎÄ¼þ --------------------------------------------------------------*/
+/* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í·ï¿½Ä¼ï¿½ --------------------------------------------------------------*/
 #include "bsp.h"
 #include "bsp_can.h"
 #include "bsp_timer.h"
@@ -18,51 +18,64 @@
 
 
 /************************************************
-º¯ÊýÃû³Æ £º LED_Initializes
-¹¦    ÄÜ £º LED³õÊ¼»¯
-²Î    Êý £º ÎÞ
-·µ »Ø Öµ £º ÎÞ
-×÷    Õß £º Felix Wu
+ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ LED_Initializes
+ï¿½ï¿½    ï¿½ï¿½ ï¿½ï¿½ LEDï¿½ï¿½Ê¼ï¿½ï¿½
+ï¿½ï¿½    ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½
+ï¿½ï¿½ ï¿½ï¿½ Öµ ï¿½ï¿½ ï¿½ï¿½
+ï¿½ï¿½    ï¿½ï¿½ ï¿½ï¿½ Felix Wu
 *************************************************/
 void LED_Initializes(void)
 {
   GPIO_InitTypeDef GPIO_InitStructure;
 
-  /* Ê¹ÄÜÊ±ÖÓ */
+  /* Ê¹ï¿½ï¿½Ê±ï¿½ï¿½ */
   RCC_APB2PeriphClockCmd(LED_GPIO_CLK, ENABLE);
 
-  /* Òý½ÅÅäÖÃ */
-  GPIO_InitStructure.GPIO_Pin   = LED_PIN;
-  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_10MHz;
-  GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_Out_PP;
-  GPIO_Init(LED_GPIO_PORT, &GPIO_InitStructure);
 
-	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);	 //Ê¹ÄÜPA¶Ë¿ÚÊ±ÖÓ
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_4;				 //LED0-->PA.4 ¶Ë¿ÚÅäÖÃ
-	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP; 		 //ÍÆÍìÊä³ö
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);	 //Ê¹ï¿½ï¿½PAï¿½Ë¿ï¿½Ê±ï¿½ï¿½
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_4|GPIO_Pin_5;				 //LED0-->PA.4 ï¿½Ë¿ï¿½ï¿½ï¿½ï¿½ï¿½
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP; 		 //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
 	GPIO_Init(GPIOA, &GPIO_InitStructure);
-	GPIO_ResetBits(GPIOA,GPIO_Pin_4);						 //PA.4 Êä³ö¸ß
-
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_5;				 //LED0-->PA.8 ¶Ë¿ÚÅäÖÃ
-	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP; 		 //ÍÆÍìÊä³ö
-	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
-	GPIO_Init(GPIOA, &GPIO_InitStructure);
-	GPIO_ResetBits(GPIOA,GPIO_Pin_5);						 //PA.8 Êä³ö¸ß
+	GPIO_ResetBits(GPIOA,GPIO_Pin_4);						 //PA.4 ï¿½ï¿½ï¿½ï¿½ï¿½
+	GPIO_ResetBits(GPIOA,GPIO_Pin_5);						 //PA.8 ï¿½ï¿½ï¿½ï¿½ï¿½
 	
-  LED_OFF();
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB,ENABLE);
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO,ENABLE);
+	GPIO_PinRemapConfig(GPIO_Remap_SWJ_Disable,ENABLE);// æ”¹å˜æŒ‡å®šç®¡è„šçš„æ˜ å°„ GPIO_Remap_SWJ_Disable SWJ å®Œå…¨ç¦ç”¨ï¼ˆJTAG+SW-DPï¼‰
+	GPIO_PinRemapConfig(GPIO_Remap_SWJ_JTAGDisable,ENABLE);// æ”¹å˜æŒ‡å®šç®¡è„šçš„æ˜ å°„ GPIO_Remap_SWJ_JTAGDisable ï¼ŒJTAG-DP ç¦ç”¨ + SW-DP ä½¿èƒ½
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_4;
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+	GPIO_Init(GPIOB, &GPIO_InitStructure);
+  
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_5|GPIO_Pin_6|GPIO_Pin_7;				 //LED0-->PA.4 ï¿½Ë¿ï¿½ï¿½ï¿½ï¿½ï¿½
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP; 		 //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
+	GPIO_Init(GPIOB, &GPIO_InitStructure);
+     
+  GPIO_PinRemapConfig(GPIO_Remap_SWJ_JTAGDisable,ENABLE);//é‡Šæ”¾PA13\PA14\PA15ã€‚
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_12|GPIO_Pin_13|GPIO_Pin_14|GPIO_Pin_15;				 //LED0-->PA.4 ï¿½Ë¿ï¿½ï¿½ï¿½ï¿½ï¿½
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING; 		 //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
+	GPIO_Init(GPIOB, &GPIO_InitStructure);
+
+	GPIO_ResetBits(GPIOB,GPIO_Pin_4);						 //PA.4 ï¿½ï¿½ï¿½ï¿½ï¿½
+	GPIO_ResetBits(GPIOB,GPIO_Pin_5);						 //PA.5 ï¿½ï¿½ï¿½ï¿½ï¿½
+	GPIO_ResetBits(GPIOB,GPIO_Pin_6);						 //PA.6 ï¿½ï¿½ï¿½ï¿½ï¿½
+	GPIO_ResetBits(GPIOB,GPIO_Pin_7);						 //PA.7 ï¿½ï¿½ï¿½ï¿½ï¿½
 }
 
 /************************************************
-º¯ÊýÃû³Æ £º BSP_Init
-¹¦    ÄÜ £º µ×²ãÇý¶¯³õÊ¼»¯
-²Î    Êý £º ÎÞ
-·µ »Ø Öµ £º ÎÞ
-×÷    Õß £º Felix Wu
+ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ BSP_Init
+ï¿½ï¿½    ï¿½ï¿½ ï¿½ï¿½ ï¿½×²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¼ï¿½ï¿½
+ï¿½ï¿½    ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½
+ï¿½ï¿½ ï¿½ï¿½ Öµ ï¿½ï¿½ ï¿½ï¿½
+ï¿½ï¿½    ï¿½ï¿½ ï¿½ï¿½ Felix Wu
 *************************************************/
 void BSP_Init(void)
 {
-  USART_Initializes();                           //USARTµ×²ã³õÊ¼»¯
+  USART_Initializes();                           //USARTï¿½×²ï¿½ï¿½Ê¼ï¿½ï¿½
 }
 
 
