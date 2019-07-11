@@ -29,24 +29,27 @@
 /* These macro describe recieve message lenght of different function code */
 /* But not include data lenght ,the data is master write to slave */
 /* because we don't know the data lenght prior, it depend on ComBuf[ComIndexNoPoint] value */
-#define ReadCoilStaIndexEnd 			7 // 0~7,0x01,0X
-#define ReadBitStaIndexEnd 				7 // 0~7,0x01,0X
-#define ForceSingleCoilIndexEnd 	7 // 0~7,0x05,0X
-#define ReadHoldRegIndexEnd 			7 // 0~7,0x03,4X
-#define PresetMulRegIndexEnd 			7 // 0~8,0x10,4X
+#define ReadCoilStaIndexEnd 			7           // 0~7,0x01,0X
+#define ReadBitStaIndexEnd 				7           // 0~7,0x01,0X
+#define ForceSingleCoilIndexEnd 	    7           // 0~7,0x05,0X
+#define ReadHoldRegIndexEnd 			7           // 0~7,0x03,4X
+#define PresetMulRegIndexEnd 			7           // 0~8,0x10,4X
 /* these macro describe send or recieve allowed */
-#define SEND 											1 		// send allowed
-#define RECIEVE 									0 		// recieve allowed
-#define SlaveID 									0x01 	// the slave's ID
+#define SEND 								1 		// send allowed
+#define RECIEVE 							0 		// recieve allowed
+#define SlaveID 							0x01 	// the slave's ID
 #define SendRecieveDelay 					20 		// Send turn to Recieve or Recieve turn to Send delay time vlaue
-#define MaxDataLen 								64 	// preset CommBuf array Max lenght
-#define MaxRegLen 								128 	// preset SlaveOutputBuf Max lenght
+#define MaxDataLen 							64 	    // preset CommBuf array Max lenght
+#define MaxRegLen 							128 	// preset SlaveOutputBuf Max lenght
 
 //======================������=====================================
 #define HMI_TASK_PRIO					4										//�������ȼ�
 #define HMI_TASK_STK_SIZE 		512  								//�����ջ��С
 #define HMI_TEST_TASK_PRIO		4										//�������ȼ�
 #define HMI_TEST_STK_SIZE 		512  								//�����ջ��С
+
+
+
 extern TaskHandle_t HMI_Run_Task_Handler;					//��ȫ������
 extern TaskHandle_t HMI_Update_task_Handler;					//��ȫ������
 //==============�����Ȧ״̬�����򣬾�����modbuS.c�Լ�modbuS.h����ʹ��======================
@@ -57,13 +60,19 @@ extern unsigned int   CommIndex;   								//�����������Ŵ
 extern unsigned char  writeadr; 									//���Ĵ������������õ���
 extern unsigned int   CommIndexEnd;	   						//�ظ�HMI�������Ӧ���鷢��������
 extern unsigned char  CommBuf[MaxDataLen];	  		//������������
+
+extern unsigned char 	APPRecFinishF;
+
 extern unsigned char  SlaveOutputBuf[MaxRegLen]; 	// Hight 8 bit of word is front,Low 8 bit is back
 
 extern unsigned char  HMIErrorTime;
 extern unsigned char  MasterErrorTime;
 extern unsigned char 	MasterPointer;
 extern unsigned char  APPSendFinish;  //MODBUS �������
-					
+
+
+
+
 unsigned int crc16_hmi(unsigned char *puchMsg,unsigned int usDataLen);	//CRCУ��
 void Modbus_Configuration(void);		 						//�Ĵ�����ʼ��
 void AnalyzeRecieve(void);			 			//������������

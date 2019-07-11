@@ -15,6 +15,7 @@
 #include "bsp.h"
 #include "app.h"
 #include "modbus.h"
+#include "SoftwareTimer.h"
 
 //任务优先级
 #define START_TASK_PRIO		1
@@ -50,7 +51,8 @@ int main(void)
 {
     /* 1、SYS初始化 */
     SysInit();
-		LED_Initializes();
+	LED_Initializes();
+	SoftwareTimer_Init();
     /* 2、创建开始任务 */
 //    xTaskCreate((TaskFunction_t )start_task,            //任务函数
 //                (const char*    )"start_task",          //任务名称

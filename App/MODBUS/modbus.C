@@ -6,10 +6,17 @@
 unsigned char RecFinishF;
 unsigned int  CommIndex;   								//�����������Ŵ���
 unsigned char writeadr; 									//���Ĵ������������õ���
-unsigned int  CommIndexEnd;	   						//�ظ�HMI�������Ӧ����?��������
+unsigned int  CommIndexEnd;	   						//�ظ�HMI�������Ӧ����?��������
 unsigned char CommBuf[MaxDataLen];	  		//������������
+
+
+unsigned char 	APPRecFinishF;
+unsigned int  	APPCommIndex;   								//�����������Ŵ���
+unsigned int 	APPCommIndexEnd;	   						//�ظ�HMI�������Ӧ����?��������
+unsigned char 	APPCommBuf[MaxDataLen];	  		//������������
+
 unsigned char SlaveOutputBuf[MaxRegLen]; 	// Hight 8 bit of word is front,Low 8 bit is back
-//==============�����Ȧ״�?�����򣬾�����modbuS.c�Լ�modbuS.h����ʹ��======================
+//==============�����Ȧ״�?�����򣬾�����modbuS.c�Լ�modbuS.h����ʹ��======================
 unsigned char CoilDat[10];      					//�󶨶���д��Ȧ��һ�𣬶���д��ȦʱHMI�Ͽؼ���ַ����һ��	
 //==================================================
 unsigned int Read1_Add;  //����Ȧ����ʼ��ַ
@@ -33,11 +40,11 @@ union
 	}half;  
 }charTOInt; 
 
-//=====================================д���ݵ��м����?=================================
+//=====================================д���ݵ��м����?=================================
 unsigned char HMIErrorTime;
 unsigned char MasterErrorTime; 
 unsigned char MasterPointer=0;
-unsigned char APPSendFinish=0;  //MODBUS �������?
+unsigned char APPSendFinish=0;  //MODBUS �������?
 //============================������==================================================
 TaskHandle_t HMI_Run_Task_Handler;					    //��ȫ������
 TaskHandle_t HMI_Update_task_Handler;					//��ȫ������
@@ -112,6 +119,10 @@ void Modbus_Configuration(void)		 //�Ĵ�����ʼ��
 	RecFinishF=0;
 	CommIndex=0;
 	CommIndexEnd=0xff; // First enlarge recieve lenght
+	
+	APPRecFinishF=0;
+	APPCommIndex=0;
+	APPCommIndexEnd=0xff; // First enlarge recieve lenght
 }
 
 
@@ -123,7 +134,7 @@ void AnalyzeRecieve(void)			 //������������
 		crc16tem=crc16_hmi(CommBuf,CommIndex-1); // calculate CRC check, erase two CRC byte
 		if (crc16tem==(((unsigned int)(CommBuf[CommIndexEnd]) << 8) | CommBuf[CommIndexEnd-1]))
 			{ 
-			  LED1_TOGGLE();   //LED���?
+			  LED1_TOGGLE();   //LED���?
 				switch (CommBuf[CommIndexFunction])
 					{
 						case ReadCoilSta:   //0x01����Ȧ�߼�ֵ
@@ -335,7 +346,8 @@ void AnalyzeRecieve(void)			 //������������
 							}
 
 							CommIndex=0;
-							SendHMIData(USART2,CommBuf,CommIndexEnd);
+							if(RecFinishF)SendHMIData(USART2,CommBuf,CommIndexEnd);
+							else if(APPRecFinishF)AGVSendDataToAppUART(USART3,CommBuf,CommIndexEnd);
 							break;
 					
 						case ForceSingleCoil:  //0x05д������Ȧ						   	
@@ -549,9 +561,10 @@ void AnalyzeRecieve(void)			 //������������
 							CommBuf[7]=(unsigned char)(crc16tem>>8); 		 // then send hight 8 bit
 							CommIndexEnd=8;
 							CommIndex=0;
-							SendHMIData(USART2,CommBuf,CommIndexEnd);
+							if(RecFinishF)SendHMIData(USART2,CommBuf,CommIndexEnd);
+							else if(APPRecFinishF)AGVSendDataToAppUART(USART3,CommBuf,CommIndexEnd);
 							break;
-						case ReadHoldReg: //������Ĵ���?
+						case ReadHoldReg: //������Ĵ���?
 							Read3_Add=CommBuf[2]<<8 | CommBuf[3];    //��ȡ����ʼ��ַ
 							Read3_Num=CommBuf[4]<<8 | CommBuf[5];	 //��ȡ������
 							Legg= Read3_Num * 2;
@@ -568,7 +581,8 @@ void AnalyzeRecieve(void)			 //������������
 							CommBuf[CommIndex]=(unsigned char)(crc16tem>>8); // then send hight 8 bit
 							CommIndexEnd=CommIndex+1;
 							CommIndex=0;
-							SendHMIData(USART2,CommBuf,CommIndexEnd);
+							if(RecFinishF)SendHMIData(USART2,CommBuf,CommIndexEnd);
+							else if(APPRecFinishF)AGVSendDataToAppUART(USART3,CommBuf,CommIndexEnd);
 							break;
 						case PresetMulReg32:  //0x10д�Ĵ���
 							Read16_Add=CommBuf[2]<<8 | CommBuf[3];
@@ -589,7 +603,8 @@ void AnalyzeRecieve(void)			 //������������
 							CommBuf[7]=(unsigned char)(crc16tem>>8); // then send hight 8 bit
 							CommIndexEnd=8;
 							CommIndex=0;
-							SendHMIData(USART2,CommBuf,CommIndexEnd);
+							if(RecFinishF)SendHMIData(USART2,CommBuf,CommIndexEnd);
+							else if(APPRecFinishF)AGVSendDataToAppUART(USART3,CommBuf,CommIndexEnd);
 							break;
 						default:
 							vTaskDelay(10);
@@ -611,6 +626,7 @@ void AnalyzeRecieve(void)			 //������������
 void HMI_Run_task(void *pvParameters){
 	u32 NotifyValue;
 	UART_HMI_Configuration(9600);
+	UART_App_Configuration(9600);
 	RecFinishF=1;RecFinishF=0;
 	CommIndex=0;
 	CommIndexEnd=0xff; // First enlarge recieve lenght 														//�ֶ�ģʽ	
@@ -622,6 +638,8 @@ void HMI_Run_task(void *pvParameters){
 		if(NotifyValue==1)
 		{
 			AnalyzeRecieve();//���ô���������Ӧд�Ĵ����Լ����Ĵ���	
+			RecFinishF=0;
+			APPRecFinishF=0;
 		}
 	}
 }	

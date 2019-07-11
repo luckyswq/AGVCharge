@@ -335,7 +335,7 @@
               <MiscControls></MiscControls>
               <Define>STM32F10X_MD</Define>
               <Undefine></Undefine>
-              <IncludePath>..\App;..\Bsp;..\Libraries\CMSIS\CoreSupport;..\Libraries\CMSIS\DeviceSupport;..\Libraries\STM32F10x_StdPeriph_Driver\inc;..\FreeRTOS\include;..\FreeRTOS\portable\RVDS\ARM_CM3;..\App\pccom;..\App\watchdog;..\App\led;..\App\Stepper;..\App\StateMachine;..\App\MODBUS</IncludePath>
+              <IncludePath>..\App;..\Bsp;..\Libraries\CMSIS\CoreSupport;..\Libraries\CMSIS\DeviceSupport;..\Libraries\STM32F10x_StdPeriph_Driver\inc;..\FreeRTOS\include;..\FreeRTOS\portable\RVDS\ARM_CM3;..\App\pccom;..\App\watchdog;..\App\led;..\App\Stepper;..\App\StateMachine;..\App\MODBUS;..\App\Charge</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -693,6 +693,16 @@
               <FileName>modbus.C</FileName>
               <FileType>1</FileType>
               <FilePath>..\App\MODBUS\modbus.C</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>App/Charge</GroupName>
+          <Files>
+            <File>
+              <FileName>SoftwareTimer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\App\Charge\SoftwareTimer.c</FilePath>
             </File>
           </Files>
         </Group>
