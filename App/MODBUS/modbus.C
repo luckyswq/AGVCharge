@@ -647,6 +647,7 @@ void HMI_Run_task(void *pvParameters){
 				else 
 				{
 					CoilDat[0]&=(~(0x01<<4));                       //电极到达限位
+					CoilDat[0]&=(~(0x01));                       	
 					GPIO_ResetBits(GPIOB,GPIO_Pin_4);
 				}
 
@@ -664,6 +665,7 @@ void HMI_Run_task(void *pvParameters){
 				else 
 				{
 					CoilDat[0]&=(~(0x01<<5));
+					CoilDat[0]&=(~(0x01<<1));
 					GPIO_ResetBits(GPIOB,GPIO_Pin_5);
 				}
 			}
