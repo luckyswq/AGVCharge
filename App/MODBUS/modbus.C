@@ -636,24 +636,38 @@ void HMI_Run_task(void *pvParameters){
 			RecFinishF=0;
 			APPRecFinishF=0;
 
-			if((CoilDat[0]&0x01))GPIO_SetBits(GPIOB,GPIO_Pin_4);						 
-			else GPIO_ResetBits(GPIOB,GPIO_Pin_4);						 
-			if(CoilDat[0]&(0x01<<1))GPIO_SetBits(GPIOB,GPIO_Pin_5);		
-			else GPIO_ResetBits(GPIOB,GPIO_Pin_5);						 
-			if(CoilDat[0]&(0x01<<2))GPIO_SetBits(GPIOB,GPIO_Pin_6);		
-			else GPIO_ResetBits(GPIOB,GPIO_Pin_6);						 
-			if(CoilDat[0]&(0x01<<3))GPIO_SetBits(GPIOB,GPIO_Pin_7);		
-			else GPIO_ResetBits(GPIOB,GPIO_Pin_7);						 
-			
+			if((CoilDat[0]&0x01))
+			{
 
-			if(GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_12))CoilDat[0]|=(0x01<<4);
-			else CoilDat[0]&=(~(0x01<<4));
-			if(GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_13))CoilDat[0]|=(0x01<<5);
-			else CoilDat[0]&=(~(0x01<<5));			
-			if(GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_14))CoilDat[0]|=(0x01<<6);
-			else CoilDat[0]&=(~(0x01<<6));
-			if(GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_15))CoilDat[0]|=(0x01<<7);
-			else CoilDat[0]&=(~(0x01<<7));			
+				if(GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_12))		//电极伸出
+				{
+					CoilDat[0]|=(0x01<<4);
+					GPIO_SetBits(GPIOB,GPIO_Pin_4);
+				}
+				else 
+				{
+					CoilDat[0]&=(~(0x01<<4));                       //电极到达限位
+					GPIO_ResetBits(GPIOB,GPIO_Pin_4);
+				}
+
+				
+			}
+			else GPIO_ResetBits(GPIOB,GPIO_Pin_4);						 
+//==============================================================
+			if(CoilDat[0]&(0x01<<1))                       //电极缩回
+			{
+				if(GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_13))
+				{
+					CoilDat[0]|=(0x01<<5);
+					GPIO_SetBits(GPIOB,GPIO_Pin_5);
+				}
+				else 
+				{
+					CoilDat[0]&=(~(0x01<<5));
+					GPIO_ResetBits(GPIOB,GPIO_Pin_5);
+				}
+			}
+			else GPIO_ResetBits(GPIOB,GPIO_Pin_5);
 		}
 	}
 }	
